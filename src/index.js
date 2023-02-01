@@ -1,10 +1,6 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
-import {
-    getFirestore,
-    collection,
-    getDocs
-} from 'firebase/firestore'
+import { addDoc, collection, deleteDoc, doc, getDocs, getFirestore, Timestamp } from "firebase/firestore";
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
@@ -15,25 +11,71 @@ const firebaseConfig = {
   projectId: "fir-workshop-fd9f6",
   storageBucket: "fir-workshop-fd9f6.appspot.com",
   messagingSenderId: "627473734951",
-  appId: "1:627473734951:web:f3b13a0c33a225ced89d02"
+  appId: "1:627473734951:web:f3b13a0c33a225ced89d02",
 };
 
 // Initialize Firebase
 initializeApp(firebaseConfig);
 
 //init firestore service
-const db = getFirestore()
+const db = getFirestore();
 
-//testing - get test collection from firebase
-const testColRef = collection(db, 'test')
+// Create Prospects reference
+const prospectRef = collection(db, "Prospects");
 
-//get test collection data
-getDocs(testColRef).then((snapshot) => {
-    let testData = []
-    snapshot.docs.forEach((doc) => {
-        testData.push({ ...doc.data(), id: doc.id })
+// DOM Manipulation
+const table = document.getElementById("prospects-table-body");
+const addProspectForm = document.getElementById("add-prospect-form");
+const deleteProspectForm = document.getElementById("delete-prospect-form");
+
+addProspectForm.addEventListener("submit", (e) => {
+  e.preventDefault();
+
+  const formData = new FormData(e.target);
+  const data = Object.fromEntries(formData.entries());
+  data.askedAt = Timestamp.fromDate(new Date(data.askedAt));
+  data.saidYes = data.saidYes === "on";
+
+  addDoc(prospectRef, data)
+    .then(() => {
+      location.reload();
     })
-    console.log(testData)
-}).catch(err => {
-    console.log(err.message)
-})
+    .catch((err) => {
+      console.log(err.message);
+    });
+});
+
+deleteProspectForm.addEventListener("submit", (e) => {
+  e.preventDefault();
+
+  const formData = new FormData(e.target);
+  const id = formData.get("id");
+
+  const docRef = doc(db, "Prospects", id);
+  deleteDoc(docRef)
+    .then(() => {
+      location.reload();
+    })
+    .catch((err) => {
+      console.log(err.message);
+    });
+});
+
+getDocs(prospectRef)
+  .then((snapshot) => {
+    const prospects = snapshot.docs.map((doc) => {
+      const { askedAt, name, saidYes } = doc.data();
+
+      return `<tr>
+                <th scope="row">${doc.id}</th>
+                <td>${name}</td>
+                <td>${askedAt ? askedAt.toDate().toLocaleDateString() : "Not yet asked."}</td>
+                <td>${saidYes ? "♥" : "😭"}</td>
+              </tr>`;
+    });
+
+    table.innerHTML = prospects.join("\n");
+  })
+  .catch((err) => {
+    console.log(err.message);
+  });
