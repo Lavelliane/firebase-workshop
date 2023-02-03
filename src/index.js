@@ -13,6 +13,7 @@ import {
   onSnapshot,
   orderBy,
   getDoc,
+  updateDoc,
 } from "firebase/firestore";
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
@@ -120,4 +121,9 @@ getDoc(docRef).then((doc) => {
 
 onSnapshot(docRef, (doc) => {
   console.log(doc.data(), doc.id);
+});
+
+// Update doc
+updateDoc(docRef, {
+  name: "Zach Riane Machopapi",
 });
