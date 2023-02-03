@@ -12,6 +12,7 @@ import {
   where,
   onSnapshot,
   orderBy,
+  getDoc,
 } from "firebase/firestore";
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
@@ -108,4 +109,15 @@ onSnapshot(q, (snapshot) => {
   });
 
   console.log(prospects);
+});
+
+// Get one document
+const docRef = doc(db, "Prospects", "2R60Aa2Vw3GMqGdXm1Xj");
+
+getDoc(docRef).then((doc) => {
+  console.log(doc.data(), doc.id);
+});
+
+onSnapshot(docRef, (doc) => {
+  console.log(doc.data(), doc.id);
 });
