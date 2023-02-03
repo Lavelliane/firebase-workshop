@@ -11,6 +11,7 @@ import {
   query,
   where,
   onSnapshot,
+  orderBy,
 } from "firebase/firestore";
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
@@ -98,7 +99,7 @@ getDocs(prospectRef)
   });
 
 // Prospects query
-const q = query(prospectRef, where("name", "==", "Bryan"));
+const q = query(prospectRef, orderBy("name"));
 
 onSnapshot(q, (snapshot) => {
   const prospects = [];
