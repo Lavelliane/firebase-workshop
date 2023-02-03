@@ -1,6 +1,17 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
-import { addDoc, collection, deleteDoc, doc, getDocs, getFirestore, Timestamp } from "firebase/firestore";
+import {
+  addDoc,
+  collection,
+  deleteDoc,
+  doc,
+  getDocs,
+  getFirestore,
+  Timestamp,
+  query,
+  where,
+  onSnapshot,
+} from "firebase/firestore";
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
@@ -36,6 +47,8 @@ addProspectForm.addEventListener("submit", (e) => {
   data.askedAt = Timestamp.fromDate(new Date(data.askedAt));
   data.saidYes = data.saidYes === "on";
 
+  console.log(data);
+
   addDoc(prospectRef, data)
     .then(() => {
       location.reload();
@@ -69,7 +82,11 @@ getDocs(prospectRef)
       return `<tr>
                 <th scope="row">${doc.id}</th>
                 <td>${name}</td>
-                <td>${askedAt ? askedAt.toDate().toLocaleDateString() : "Not yet asked."}</td>
+                <td>${
+                  askedAt
+                    ? askedAt.toDate().toLocaleDateString()
+                    : "Not yet asked."
+                }</td>
                 <td>${saidYes ? "♥" : "😭"}</td>
               </tr>`;
     });
@@ -79,3 +96,15 @@ getDocs(prospectRef)
   .catch((err) => {
     console.log(err.message);
   });
+
+// Prospects query
+const q = query(prospectRef, where("name", "==", "Bryan"));
+
+onSnapshot(q, (snapshot) => {
+  const prospects = [];
+  snapshot.docs.forEach((doc) => {
+    prospects.push({ ...doc.data(), id: doc.id });
+  });
+
+  console.log(prospects);
+});
