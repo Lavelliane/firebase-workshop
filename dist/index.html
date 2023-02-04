@@ -61,6 +61,7 @@
     </table>
 
     <p class="fw-bold mb-2">Query prospects</p>
+
     <form class="mb-4" id="query-prospect-form" method="post">
       <div class="mb-3">
         <label for="name" class="form-label">Name</label>
@@ -79,6 +80,31 @@
         </tr>
       </thead>
       <tbody id="query-table-body"></tbody>
+    </table>
+
+    <form class="mb-4" id="prospect-form" method="post">
+      <div class="mb-3">
+        <label for="prospect-id" class="form-label">ID</label>
+        <input
+          type="text"
+          class="form-control"
+          id="prospect-id"
+          name="prospect-id"
+        />
+      </div>
+      <button type="submit" class="btn btn-success">Fetch</button>
+    </form>
+
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th scope="col">ID</th>
+          <th scope="col">Name</th>
+          <th scope="col">Asked At</th>
+          <th scope="col">Yes?</th>
+        </tr>
+      </thead>
+      <tbody id="prospect-table-body"></tbody>
     </table>
 
     <script src="bundle.js"></script>

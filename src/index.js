@@ -137,18 +137,51 @@ queryProspectForm.addEventListener("submit", (e) => {
   });
 });
 
-// Get one document
-const docRef = doc(db, "Prospects", "2R60Aa2Vw3GMqGdXm1Xj");
+// Create query table
+const prospectForm = document.getElementById("prospect-form");
+const pTable = document.getElementById("prospect-table-body");
 
-getDoc(docRef).then((doc) => {
-  console.log(doc.data(), doc.id);
-});
+prospectForm.addEventListener("submit", (e) => {
+  e.preventDefault();
 
-onSnapshot(docRef, (doc) => {
-  console.log(doc.data(), doc.id);
+  const formData = new FormData(e.target);
+  const id = formData.get("prospect-id");
+
+  // Get one document
+  const docRef = doc(db, "Prospects", id);
+
+  getDoc(docRef).then((doc) => {
+    const { askedAt, name, saidYes } = doc.data();
+
+    pTable.innerHTML = `<tr>
+                <th scope="row">${doc.id}</th>
+                <td>${name}</td>
+                <td>${
+                  askedAt
+                    ? askedAt.toDate().toLocaleDateString()
+                    : "Not yet asked."
+                }</td>
+                <td>${saidYes ? "♥" : "😭"}</td>
+              </tr>`;
+  });
+
+  onSnapshot(docRef, (doc) => {
+    const { askedAt, name, saidYes } = doc.data();
+
+    pTable.innerHTML = `<tr>
+                <th scope="row">${doc.id}</th>
+                <td>${name}</td>
+                <td>${
+                  askedAt
+                    ? askedAt.toDate().toLocaleDateString()
+                    : "Not yet asked."
+                }</td>
+                <td>${saidYes ? "♥" : "😭"}</td>
+              </tr>`;
+  });
 });
 
 // Update doc
-updateDoc(docRef, {
-  name: "Zach Riane Machopapi",
-});
+// updateDoc(docRef, {
+//   name: "Zach Riane Machopapi",
+// });
