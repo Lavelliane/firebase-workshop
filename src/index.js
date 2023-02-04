@@ -181,7 +181,22 @@ prospectForm.addEventListener("submit", (e) => {
   });
 });
 
-// Update doc
-// updateDoc(docRef, {
-//   name: "Zach Riane Machopapi",
-// });
+// Update documents
+const updateProspectForm = document.getElementById("update-prospect-form");
+
+updateProspectForm.addEventListener("submit", (e) => {
+  e.preventDefault();
+
+  const formData = new FormData(e.target);
+  const id = formData.get("update-prospect-id");
+  const name = formData.get("update-prospect-name");
+
+  const docRef = doc(db, "Prospects", id);
+
+  // Update doc
+  updateDoc(docRef, {
+    name,
+  }).then(() => {
+    location.reload();
+  });
+});

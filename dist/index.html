@@ -107,6 +107,28 @@
       <tbody id="prospect-table-body"></tbody>
     </table>
 
+    <form class="mb-4" id="update-prospect-form" method="post">
+      <div class="mb-3">
+        <label for="update-prospect-id" class="form-label">ID</label>
+        <input
+          type="text"
+          class="form-control"
+          id="update-prospect-id"
+          name="update-prospect-id"
+        />
+      </div>
+      <div class="mb-3">
+        <label for="update-prospect-name" class="form-label">New name</label>
+        <input
+          type="text"
+          class="form-control"
+          id="update-prospect-name"
+          name="update-prospect-name"
+        />
+      </div>
+      <button type="submit" class="btn btn-warning">Update</button>
+    </form>
+
     <script src="bundle.js"></script>
   </body>
 </html>
