@@ -100,16 +100,41 @@ getDocs(prospectRef)
     console.log(err.message);
   });
 
-// Prospects query
-const q = query(prospectRef, orderBy("name"));
+// Create query table
+const queryProspectForm = document.getElementById("query-prospect-form");
+const qTable = document.getElementById("query-table-body");
 
-onSnapshot(q, (snapshot) => {
-  const prospects = [];
-  snapshot.docs.forEach((doc) => {
-    prospects.push({ ...doc.data(), id: doc.id });
+queryProspectForm.addEventListener("submit", (e) => {
+  e.preventDefault();
+
+  const formData = new FormData(e.target);
+  const name = formData.get("name");
+
+  // Prospects query
+  const q = query(
+    prospectRef,
+    where("name", "==", name),
+    orderBy("askedAt", "desc")
+  );
+
+  onSnapshot(q, (snapshot) => {
+    const prospects = snapshot.docs.map((doc) => {
+      const { askedAt, name, saidYes } = doc.data();
+
+      return `<tr>
+                  <th scope="row">${doc.id}</th>
+                  <td>${name}</td>
+                  <td>${
+                    askedAt
+                      ? askedAt.toDate().toLocaleDateString()
+                      : "Not yet asked."
+                  }</td>
+                  <td>${saidYes ? "♥" : "😭"}</td>
+                </tr>`;
+    });
+
+    qTable.innerHTML = prospects.join("\n");
   });
-
-  console.log(prospects);
 });
 
 // Get one document
