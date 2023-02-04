@@ -137,7 +137,7 @@ queryProspectForm.addEventListener("submit", (e) => {
   });
 });
 
-// Create query table
+// Create single document table
 const prospectForm = document.getElementById("prospect-form");
 const pTable = document.getElementById("prospect-table-body");
 
